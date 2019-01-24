@@ -119,7 +119,7 @@ n_greater_50k = data[data['income'] == '>50K'].shape[0]
 n_at_most_50k = data[data['income'] == '<=50K'].shape[0]
 
 # TODO：被调查者收入大于$50,000所占的比例
-greater_percent = (1.0 * n_greater_50k) / (n_greater_50k + n_at_most_50k)
+greater_percent = (100.0 * n_greater_50k) / (n_greater_50k + n_at_most_50k)
 
 # 打印结果
 print ("Total number of records: {}".format(n_records))
@@ -131,7 +131,7 @@ print ("Percentage of individuals making more than $50,000: {:.2f}%".format(grea
     Total number of records: 45222
     Individuals making more than $50,000: 11208
     Individuals making at most $50,000: 34014
-    Percentage of individuals making more than $50,000: 0.25%
+    Percentage of individuals making more than $50,000: 24.78%
 
 
 ----
@@ -487,7 +487,7 @@ def train_predict(learner, sample_size, X_train, y_train, X_val, y_val):
     # TODO：使用sample_size大小的训练数据来拟合学习器
     # TODO: Fit the learner to the training data using slicing with 'sample_size'
     start = time() # 获得程序开始时间
-    learner.fit(X_train, y_train)
+    learner.fit(X_train[0:sample_size], y_train[0:sample_size])
     end = time() # 获得程序结束时间
     
     # TODO：计算训练时间
@@ -497,20 +497,20 @@ def train_predict(learner, sample_size, X_train, y_train, X_val, y_val):
     #       然后得到对前300个训练数据的预测结果
     start = time() # 获得程序开始时间
     predictions_val = learner.predict(X_val)
-    predictions_train = learner.predict(X_train[0:sample_size])
+    predictions_train = learner.predict(X_train[0:300])
     end = time() # 获得程序结束时间
     
     # TODO：计算预测用时
     results['pred_time'] = end - start
             
     # TODO：计算在最前面的300个训练数据的准确率
-    results['acc_train'] = accuracy_score(y_train[0:sample_size], predictions_train)
+    results['acc_train'] = accuracy_score(y_train[0:300], predictions_train)
         
     # TODO：计算在验证上的准确率
     results['acc_val'] = accuracy_score(y_val, predictions_val)
     
     # TODO：计算在最前面300个训练数据上的F-score
-    results['f_train'] = fbeta_score(y_train[0:sample_size], predictions_train, 0.5)
+    results['f_train'] = fbeta_score(y_train[0:300], predictions_train, 0.5)
         
     # TODO：计算验证集上的F-score
     results['f_val'] = fbeta_score(y_val, predictions_val, 0.5)
@@ -541,8 +541,8 @@ from sklearn.ensemble import RandomForestClassifier
 
 # TODO：初始化三个模型
 clf_A = GaussianNB()
-clf_B = DecisionTreeClassifier()
-clf_C = RandomForestClassifier()
+clf_B = DecisionTreeClassifier(random_state=100)
+clf_C = RandomForestClassifier(random_state=100)
 
 # TODO：计算1%， 10%， 100%的训练数据分别对应多少点
 samples_1 = len(X_train) // 100
@@ -598,7 +598,7 @@ vs.evaluate(results, accuracy, fscore)
 *用一到两段话，向 *CharityML* 用外行也听得懂的话来解释最终模型是如何工作的。你需要解释所选模型的主要特点。例如，这个模型是怎样被训练的，它又是如何做出预测的。避免使用高级的数学或技术术语，不要使用公式或特定的算法名词。*
 
 **回答： ** 
-`通过数据和预期的结果，得到一种映射关系，使得对大量的数据都可以得到合理的结果的过程`
+`所谓决策树模型，就是一种通过模拟人脑做决策的过程的方法。首先确定目标标签数据，然后查看所有其他的数据标签，找出最能将目标进行分类的标签作为最优的标签。使用找到的最优标签，根据数据的多样性进行分类，然后对每一个分类继续查找最优的标签，一直重复直到分类的结果可以清楚的对目标标签分类，这样就形成了一个树的结构来描述整个过程。通过使用大量的数据不断重复整个过程，得到每一个决策节点对不同决策结果的概率值。然后就可以使用这个包含了概率权重的决策树来对新的数据进行判断，最后确定属于哪一类。这就是整个决策树模型的过程。`
 
 ### 练习：模型调优
 调节选择的模型的参数。使用网格搜索（GridSearchCV）来至少调整模型的重要参数（至少调整一个），这个参数至少需尝试3个不同的值。你要使用整个训练集来完成这个过程。在接下来的代码单元中，你需要实现以下功能：
@@ -675,13 +675,13 @@ print ("Final F-score on the validation data: {:.4f}".format(fbeta_score(y_val, 
     
     Unoptimized model
     ------
-    Accuracy score on validation data: 0.8191
-    F-score on validation data: 0.6351
+    Accuracy score on validation data: 0.8208
+    F-score on validation data: 0.6386
     
     Optimized Model
     ------
-    Final accuracy score on the validation data: 0.8596
-    Final F-score on the validation data: 0.7348
+    Final accuracy score on the validation data: 0.8595
+    Final F-score on the validation data: 0.7345
 
 
 ### 问题 5 - 最终模型评估
@@ -717,6 +717,8 @@ _在这十三个记录中，你认为哪五个特征对于预测是最重要的�
 - 特征3: `occupation，职业决定了收入`
 - 特征4: `education_level，教育情况会影响职业和收入`
 - 特征5: `education-num，教育情况会影响职业和收入`
+
+`特征排序（从高到低）：age / capital-gain / occupation / education_level / education-num`
 
 ### 练习 - 提取特征重要性
 
@@ -788,13 +790,13 @@ print ("F-score on validation data: {:.4f}".format(fbeta_score(y_val, reduced_pr
 
     Final Model trained on full data
     ------
-    Accuracy on validation data: 0.8596
-    F-score on validation data: 0.7348
+    Accuracy on validation data: 0.8595
+    F-score on validation data: 0.7345
     
     Final Model trained on reduced data
     ------
-    Accuracy on validation data: 0.8474
-    F-score on validation data: 0.6961
+    Accuracy on validation data: 0.8472
+    F-score on validation data: 0.6957
 
 
 ### 问题 8 - 特征选择的影响
@@ -822,8 +824,8 @@ print ("Accuracy on validation data: {:.4f}".format(accuracy_score(y_test, test_
 print ("F-score on validation data: {:.4f}".format(fbeta_score(y_test, test_predictions, beta = 0.5)))
 ```
 
-    Accuracy on validation data: 0.8439
-    F-score on validation data: 0.6881
+    Accuracy on validation data: 0.8441
+    F-score on validation data: 0.6889
 
 
 > **注意：** 当你写完了所有的代码，并且回答了所有的问题。你就可以把你的 iPython Notebook 导出成 HTML 文件。你可以在菜单栏，这样导出**File -> Download as -> HTML (.html)**把这个 HTML 和这个 iPython notebook 一起做为你的作业提交。
