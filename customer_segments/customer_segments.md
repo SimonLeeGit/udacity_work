@@ -172,7 +172,7 @@ display(data.describe())
 
 ```python
 # TODO：从数据集中选择三个你希望抽样的数据点的索引
-indices = [75,181,357]
+indices = [180,357,358]
 
 # 为选择的样本建立一个DataFrame
 samples = pd.DataFrame(data.loc[indices], columns = data.keys()).reset_index(drop = True)
@@ -213,30 +213,30 @@ display(samples)
   <tbody>
     <tr>
       <th>0</th>
-      <td>20398</td>
-      <td>1137</td>
-      <td>3</td>
-      <td>4407</td>
-      <td>3</td>
-      <td>975</td>
+      <td>12356</td>
+      <td>6036</td>
+      <td>8887</td>
+      <td>402</td>
+      <td>1382</td>
+      <td>2794</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>112151</td>
-      <td>29627</td>
-      <td>18148</td>
-      <td>16745</td>
-      <td>4948</td>
-      <td>8550</td>
-    </tr>
-    <tr>
-      <th>2</th>
       <td>37</td>
       <td>1275</td>
       <td>22272</td>
       <td>137</td>
       <td>6747</td>
       <td>110</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>759</td>
+      <td>18664</td>
+      <td>1660</td>
+      <td>6114</td>
+      <td>536</td>
+      <td>4100</td>
     </tr>
   </tbody>
 </table>
@@ -258,9 +258,9 @@ display(samples)
 了解这一点后，你应该如何比较呢？这对推动你了解他们是什么类型的企业有帮助吗？
 
 **回答:**
-`1. 蔬菜水果零售店（主要以Fresh类型为主）；`
-`2. 超市（类型比较丰富，主要涉及到Fresh、Milk、Grocery等）`
-`3. 杂货店（主要以Grocery和Detergents_Paper类型为主）；`
+`1. 超市（产品类型比较均衡，都比较接近平均值）；`
+`2. 零售商（主要以Grocery和Detergents_Paper类型为主）；`
+`3. 咖啡馆（主要以Milk、Delicatessen类型为主）`
 
 ### 练习: 特征相关性
 一个有趣的想法是，考虑这六个类别中的一个（或者多个）产品类别，是否对于理解客户的购买行为具有实际的相关性。也就是说，当用户购买了一定数量的某一类产品，我们是否能够确定他们必然会成比例地购买另一种类的产品。有一个简单的方法可以检测相关性：我们用移除了某一个特征之后的数据集来构建一个监督学习（回归）模型，然后用这个模型去预测那个被移除的特征，再对这个预测结果进行评分，看看预测结果如何。
@@ -305,7 +305,7 @@ print(score)
 **提示：** 决定系数（coefficient of determination），$R^2$ 结果在0到1之间，1表示完美拟合，一个负的 $R^2$ 表示模型不能够拟合数据。如果你对某个特征得到了低分，这使我们相信这一特征点是难以预测其余特征点的。当考虑相关性时，这使其成为一个重要特征。
 
 **回答:**
-`预测的特征为“Detergents_Paper”，得分为0.7210295353820265，根据决定系数，评分介于0-1意味着预测特征有相关性，所以这个特征对于区分用户的消费习惯来说是有必要的`
+`预测的特征为“Detergents_Paper”，得分为0.7210295353820265，根据决定系数，评分介于0-1意味着预测特征能被很好的拟合，那么这个特征是可以通过其他特征来描述的，说明这个特征和其他特征是有相关性的，所以这个特征对于区分用户的消费习惯来说是没有必要的`
 
 ### 可视化特征分布
 为了能够对这个数据集有一个更好的理解，我们可以对数据集中的每一个产品特征构建一个散布矩阵（scatter matrix）。如果你发现你在上面尝试预测的特征对于区分一个特定的用户来说是必须的，那么这个特征和其它的特征可能不会在下面的散射矩阵中显示任何关系。相反的，如果你认为这个特征对于识别一个特定的客户是没有作用的，那么通过散布矩阵可以看出在这个数据特征和其它特征中有关联性。运行下面的代码以创建一个散布矩阵。
@@ -407,30 +407,30 @@ display(log_samples)
   <tbody>
     <tr>
       <th>0</th>
-      <td>9.923192</td>
-      <td>7.036148</td>
-      <td>1.098612</td>
-      <td>8.390949</td>
-      <td>1.098612</td>
-      <td>6.882437</td>
+      <td>9.421897</td>
+      <td>8.705497</td>
+      <td>9.092345</td>
+      <td>5.996452</td>
+      <td>7.231287</td>
+      <td>7.935230</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>11.627601</td>
-      <td>10.296441</td>
-      <td>9.806316</td>
-      <td>9.725855</td>
-      <td>8.506739</td>
-      <td>9.053687</td>
-    </tr>
-    <tr>
-      <th>2</th>
       <td>3.610918</td>
       <td>7.150701</td>
       <td>10.011086</td>
       <td>4.919981</td>
       <td>8.816853</td>
       <td>4.700480</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>6.632002</td>
+      <td>9.834352</td>
+      <td>7.414573</td>
+      <td>8.718337</td>
+      <td>6.284134</td>
+      <td>8.318742</td>
     </tr>
   </tbody>
 </table>
@@ -1133,7 +1133,7 @@ good_data = log_data.drop(log_data.index[outliers]).reset_index(drop = True)
 
 
 **回答:**
-`从上述输出信息来看，有些数据点存在多个异常特征值，应该从数据集中删除这些数据点。`
+`从上述输出信息来看，有些数据点存在多个异常特征值，应该从数据集中删除这些数据点。由于数据有多个特征，在某个特征上上异常，在别对特征不一定上异常，如果全部删除，会有大量数据信息量丢失，所以至少2个特征存在异常值才删除对应对数据点，以减少删掉异常值带来对数据损失。`
 
 ## 特征转换
 在这个部分中你将使用主成分分析（PCA）来分析批发商客户数据的内在结构。由于使用PCA在一个数据集上会计算出最大化方差的维度，我们将找出哪一个特征组合能够最好的描绘客户。
@@ -1177,10 +1177,10 @@ pca_results = vs.pca_results(good_data, pca)
 * 某一特定维度上的正向增长对应正权特征的增长和负权特征的减少。增长和减少的速率和每个特征的权重相关。[参考资料：Interpretation of the Principal Components](https://onlinecourses.science.psu.edu/stat505/node/54)
 
 **回答:**
-`1、数据的第一个主成分解释了Detergents_Paper，对于不太愿意购买Detergents_Paper的人，同样很少会购买Grocery和Milk；`
-`2、数据的第二个主成分解释了Fresh、Delicatessen和Frozen，对于不太愿意购买Fresh的人，同样很少购买Delicatessen和Frozen；`
-`3、数据的第三个主成分解释了Fresh和Delicatessen，对于不太愿意购买Fresh的人，会对Delicatessen表现出强烈对购买欲望；`
-`4、数据对第四个主成分解释了Frozen和Delicatessen，对于愿意购买Frozen的人，不太愿意购买Delicatessen；`
+`1、第一个主成分中Detergents_Paper、Grocery和Milk的权重较大，消费习惯上比较接近快消类商品，主要针对经常光顾杂货店类型商店的用户；`
+`2、第二个主成分中Fresh、Delicatessen和Frozen的权重较大，消费习惯上比较接近生鲜、冷冻和熟食类商品，主要针对经常光顾食品店类型的商店的用户；`
+`3、第三个主成分中Fresh和Delicatessen权重较大且负相关，消费习惯上购买熟食更多，购买生鲜较少，主要针对经常光顾餐饮类型但商店的用户；`
+`4、第四个主成分中Frozen和Delicatessen权重较大且负相关，消费习惯上购买冷冻商品多，购买熟食较少，主要针对经常光顾冷冻类商店的用户；`
 
 ### 观察
 运行下面的代码，查看经过对数转换的样本数据在进行一个6个维度的主成分分析（PCA）之后会如何改变。观察样本数据的前四个维度的数值。考虑这和你初始对样本点的解释是否一致。
@@ -1221,30 +1221,30 @@ display(pd.DataFrame(np.round(pca_samples, 4), columns = pca_results.index.value
   <tbody>
     <tr>
       <th>0</th>
-      <td>8.3665</td>
-      <td>-0.5353</td>
-      <td>1.0888</td>
-      <td>-1.0634</td>
-      <td>-0.2159</td>
-      <td>4.1768</td>
+      <td>-1.1528</td>
+      <td>-0.6434</td>
+      <td>-0.1174</td>
+      <td>-1.7148</td>
+      <td>0.1963</td>
+      <td>-0.1489</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>-2.1974</td>
-      <td>-4.9048</td>
-      <td>-0.0686</td>
-      <td>0.5623</td>
-      <td>0.5195</td>
-      <td>0.2369</td>
-    </tr>
-    <tr>
-      <th>2</th>
       <td>-2.8504</td>
       <td>5.6340</td>
       <td>0.9776</td>
       <td>0.6557</td>
       <td>-0.8249</td>
       <td>-1.1573</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>-0.2029</td>
+      <td>-0.2821</td>
+      <td>3.0821</td>
+      <td>0.6131</td>
+      <td>0.7904</td>
+      <td>1.6633</td>
     </tr>
   </tbody>
 </table>
@@ -1310,18 +1310,18 @@ display(pd.DataFrame(np.round(pca_samples, 4), columns = ['Dimension 1', 'Dimens
   <tbody>
     <tr>
       <th>0</th>
-      <td>8.3026</td>
-      <td>-0.4747</td>
+      <td>-1.1464</td>
+      <td>-0.5574</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>-2.1899</td>
-      <td>-4.8605</td>
+      <td>-2.7963</td>
+      <td>5.6935</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>-2.7963</td>
-      <td>5.6935</td>
+      <td>-0.1924</td>
+      <td>-0.2255</td>
     </tr>
   </tbody>
 </table>
@@ -1342,7 +1342,7 @@ vs.biplot(good_data, reduced_data, pca)
 
 
 
-    <matplotlib.axes._subplots.AxesSubplot at 0x1a2427d978>
+    <matplotlib.axes._subplots.AxesSubplot at 0x1a169e8d68>
 
 
 
@@ -1515,8 +1515,8 @@ display(true_centers)
 **提示：** 一个被分到`'Cluster X'`的客户最好被用 `'Segment X'`中的特征集来标识的企业类型表示。考虑每个细分所代表的选择特征点的值。 引用它们的各项平均值，以了解它们代表什么样的机构。
 
 **回答:**
-`Segment0：Milk、Grocery和Detergents_Paper的花费会更多一些，代表了企业白领上班族的消费习惯，以杂货类、纸巾类和奶制品等快消为主；`
-`Segment1：Fresh和Frozen的花费较多，代表了居家生活人士的消费习惯，以水果生鲜和冷冻食品为主；`
+`Segment0：Milk、Grocery和Detergents_Paper的花费会更接近平均值，代表了企业白领上班族的消费习惯，以杂货类、纸巾类和奶制品等快消为主；`
+`Segment1：Fresh和Frozen的花费更接近平均值，代表了居家生活人士的消费习惯，以水果生鲜和冷冻食品为主；`
 
 ### 问题 9
 * 对于每一个样本点**问题 8 **中的哪一个分类能够最好的表示它？
@@ -1531,9 +1531,9 @@ for i, pred in enumerate(sample_preds):
     print("Sample point", i, "predicted to be in Cluster", pred)
 ```
 
-    Sample point 0 predicted to be in Cluster 1
+    Sample point 0 predicted to be in Cluster 0
     Sample point 1 predicted to be in Cluster 0
-    Sample point 2 predicted to be in Cluster 0
+    Sample point 2 predicted to be in Cluster 1
 
 
 **回答:**
@@ -1600,7 +1600,7 @@ print("使用cluster特征的得分: %.4f"%score_with_cluster)
 
 
 **回答：**
-`通过上述数据可以看出，使用cluster和不使用cluster的数据相差无几，所以cluster特征和Region特征无关，可以通过降维，去掉cluster特征`
+`通过上述数据可以看出，使用cluster会比不使用cluster的数据有所提升，通常监督学习总是需要label来进行预测的，非监督学习则不需要，所以通过非监督学习得到label，然后使用监督学习进行预测，可以有效提升最终的得分`
 
 ### 可视化内在的分布
 
