@@ -212,7 +212,7 @@ print('dog_files_short: ', face_detect_ratio(dog_files_short))
 # 
 # __回答:__
 # 
-# `不合理，现实中很多情况下得到的图像都是很模糊都，为了能中面部特征不明显都情况下检测到，就需要提供一些模糊都数据，可以通过图像处理都方式，根据原来都数据生成一系列模糊都数据，也就是通过增强图片都方式来获得较好的效果`
+# `不合理，现实中很多情况下得到的图像都是很模糊都，为了能在面部特征不明显都情况下检测到，可以尝试通过haar级联检测的方式来实现。Haar特征反应了图像的灰度变换，很适合描述人脸的特征，即使图像比较模糊的情况下，也能很好的抽取相应的特征`
 # 
 
 # ---
@@ -411,7 +411,7 @@ test_tensors = paths_to_tensor(test_files).astype('float32')/255
 # 2. 你也可以根据上图提示的步骤搭建卷积网络，那么请说明为何如上的架构能够在该问题上取得很好的表现。
 # 
 # __回答:__ 
-# 通过查看上图的CNN网络模型，发现使用了3个卷积层，3个池化层，能很好的描述所要解决的问题，同时有保证模型的训练效率，再加以global_average_pooling和dense层，极大的避免了过拟合。并且经过验证，输出的结果也是不错的。
+# 通过查看上图的CNN网络模型，发现使用了3个卷积层，以提取图像中的特征；使用了3个池化层，以保证卷积过程中能不断降维；再加以global_average_pooling和dense层，不仅最终提取图像中的所有特征，并极大的避免了过拟合；通过使用激活函数relu，不仅保证模型的精度，还可以极大的加速训练；最后通过激活函数softmax，来得到一条连续的输出。
 
 # In[12]:
 
@@ -611,7 +611,7 @@ def VGG16_predict_breed(img_path):
 #     valid_{network} = bottleneck_features['valid']
 #     test_{network} = bottleneck_features['test']
 
-# In[25]:
+# In[24]:
 
 ### TODO: 从另一个预训练的CNN获取bottleneck特征
 bottleneck_features = np.load('bottleneck_features/DogResnet50Data.npz')
@@ -637,14 +637,14 @@ test_Resnet50 = bottleneck_features['test']
 # 
 # 
 # __回答:__ 
-# (1)搭建网络模型，将ResNet50对数据作为输入，通过GlobalAveragePooling2D进行变换，以用来减少过拟合；
-# (2)增加Dense层，将卷积对结果进行传递；
+# (1)搭建网络模型，将ResNet50的最后一层作为GlobalAveragePooling2D的输入，以用来减少过拟合；
+# (2)增加Dense层，使用softmax作为激活函数，并设置狗的种类数量为133；
 # (3)生成模型并进行编译；
 # 
-# 使用Resnet50进行迁移学习，主要考虑就是Resnet50对模型数据比较好，可以满足准确率的要求，同时也考虑到Resnet50对神经网络的退化问题有很好的解决；
+# 首先由于Resnet50很好的解决了深度神经网络的退化问题，所以构建的模型层数会更多，自然效果要比VGG16好一些；使用Resnet50进行迁移学习，能极大的减少模型训练所需时间，可以增加训练的次数，以达到较佳的效果。
 # 
 
-# In[26]:
+# In[25]:
 
 ### TODO: 定义你的框架
 Resnet50_model = Sequential()
@@ -654,7 +654,7 @@ Resnet50_model.add(Dense(133, activation='softmax'))
 Resnet50_model.summary()
 
 
-# In[27]:
+# In[26]:
 
 ### TODO: 编译模型
 Resnet50_model.compile(loss='categorical_crossentropy', optimizer='rmsprop', metrics=['accuracy'])
@@ -673,7 +673,7 @@ Resnet50_model.compile(loss='categorical_crossentropy', optimizer='rmsprop', met
 # 当然，你也可以对训练集进行 [数据增强](https://blog.keras.io/building-powerful-image-classification-models-using-very-little-data.html) 以优化模型的表现，不过这不是必须的步骤。
 # 
 
-# In[28]:
+# In[27]:
 
 ### TODO: 训练模型
 checkpointer = ModelCheckpoint(filepath='saved_models/weights.best.Resnet50.hdf5', 
@@ -684,7 +684,7 @@ Resnet50_model.fit(train_Resnet50, train_targets,
           epochs=20, batch_size=20, callbacks=[checkpointer], verbose=1)
 
 
-# In[29]:
+# In[28]:
 
 ### TODO: 加载具有最佳验证loss的模型权重
 Resnet50_model.load_weights('saved_models/weights.best.Resnet50.hdf5')
@@ -700,7 +700,7 @@ Resnet50_model.load_weights('saved_models/weights.best.Resnet50.hdf5')
 # 
 # 在狗图像的测试数据集上试用你的模型。确保测试准确率大于60%。
 
-# In[30]:
+# In[29]:
 
 ### TODO: 在测试集上计算分类准确率
 Resnet50_predictions = [np.argmax(Resnet50_model.predict(np.expand_dims(feature, axis=0))) for feature in test_Resnet50]
@@ -730,7 +730,7 @@ print('Test accuracy: %.4f%%' % test_accuracy)
 # 
 # ### __问题 9:__
 
-# In[31]:
+# In[30]:
 
 ### TODO: 写一个函数，该函数将图像的路径作为输入
 ### 然后返回此模型所预测的狗的品种
@@ -776,7 +776,7 @@ def Resnet50_predict_breed(img_path):
 # ---
 # 
 
-# In[40]:
+# In[46]:
 
 ### TODO: 设计你的算法
 ### 自由地使用所需的代码单元数吧
@@ -785,18 +785,24 @@ def image_detector(file):
         print('Hello, dog!')
         img = cv2.imread(file)
         cv_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-        plt.imshow(img)
+        plt.imshow(cv_rgb)
+        plt.show()
         print('It looks like a ...')
         print(Resnet50_predict_breed(file))
     elif face_detector(file):
         print('Hello, human!')
         img = cv2.imread(file)
         cv_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-        plt.imshow(img)
+        plt.imshow(cv_rgb)
+        plt.show()
         print('You look like a ...')
         print(Resnet50_predict_breed(file))
     else:
         print('Invalid image file.')
+        img = cv2.imread(file)
+        cv_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        plt.imshow(cv_rgb)
+        plt.show()
 
 
 # ---
@@ -820,7 +826,7 @@ def image_detector(file):
 # 1. 输出结果前4个狗的还比较准确，后2个人的相差比较大，比预想的要差一些；
 # 2. 由于模型是通过狗的数据集训练的，所以对狗的结果比较好，而对人的结果不好；为了优化，（1）用新的包含人的数据集来重现训练模型；（2）对原来对数据集抽样部分数据，将人脸和图片进行PS在一起，然后增强训练模型；（3）在模型中增加Drop层，减少模型对拟合程度，以增加适配性；
 
-# In[42]:
+# In[47]:
 
 ## TODO: 在你的电脑上，在步骤6中，至少在6张图片上运行你的算法。
 ## 自由地使用所需的代码单元数吧
