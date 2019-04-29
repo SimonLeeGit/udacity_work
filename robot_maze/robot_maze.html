@@ -13701,6 +13701,14 @@ height=263
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>(回答区)</p>
+<p>使用的参数为：
+epoch = 20
+epsilon0 = 0.5
+alpha = 0.5
+gamma = 0.9
+maze_size = (6,6)
+trap_number = 1</p>
+<p>通过对比不同的epsilon0和alpha参数，发现epsilon0的大小，决定了起始的生活的探索可能性，如果比较大的化，也会影响后面的收敛速度；alpha参数的大小，决定了继承经验的可能性，如果太小，会导致无法快速找到目标，如果太大，会导致收敛速度变慢；</p>
 
 </div>
 </div>
