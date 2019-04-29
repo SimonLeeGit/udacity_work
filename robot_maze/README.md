@@ -52,11 +52,11 @@ conda env create -f envirnment.yml
 **问题 1**：请参照如上的定义，描述出 “机器人走迷宫这个问题” 中强化学习五个组成部分对应的实际对象：
 
 - **环境** : 描述了智能体发生交互的场景，会根据智能体不同的动作 $a_t$ ，反馈状态 $s_{t+1}$ 和 奖励 $r_{t+1}$
-- **状态** : 智能体在该时刻 $t$ 的环境中，所处的状态 $s_t$
+- **状态** : 智能体在该时刻 $t$ 的环境中，所处的状态 $s_t$，这里指的是当前机器人的位置信息
 
 
-- **动作** : 智能体根据当前所处的状态 $s_t$ 的情况，根据一定的策略，所要实施的动作 $a_t$
-- **奖励** : 智能体在触发动作 $a_t$ 后，得到的奖励 $r_{t+1}$
+- **动作** : 智能体根据当前所处的状态 $s_t$ 的情况，根据一定的策略，所要实施的动作 $a_t$，这里指的是机器人下一步往哪个方向移动（上、下、左或右）
+- **奖励** : 智能体在触发动作 $a_t$ 后，得到的奖励 $r_{t+1}$，这里指的是机器人往不同方向移动后，根据是否撞墙（-10）、碰到陷阱（-30）、到达终点（50）或者其它（-0.1）等得到不同的奖励
 
 $$T(s^{'}, a, s) = P(s^{'}|a,s)$$
 
@@ -95,8 +95,8 @@ $$
 $$
 \begin{align}
 q(s_{t},a) & = R_{t+1} + \gamma \times\max_a q(a,s_{t+1}) \\
- & =(-0.1) + (0.9)*(-24) \\
- & =(-21.7)
+ & =(-0.1) + (0.9)*(40) \\
+ & =(35.9)
 \end{align}
 $$
 
@@ -192,7 +192,7 @@ rewards = []
 
 ## 循环、随机移动机器人10次，记录下奖励
 for i in range(10):
-    action = choose_action(epsilon)
+    action = random.choice(actions)
     rewards.append(maze.move_robot(action))
 
 ## 输出机器人最后的位置
@@ -202,7 +202,7 @@ print(maze.sense_robot())
 maze
 ```
 
-    (2, 8)
+    (2, 11)
 
 
 
@@ -242,7 +242,7 @@ print(robot.update())
 maze
 ```
 
-    ('u', -0.1)
+    ('l', -10.0)
 
 
 
@@ -279,15 +279,15 @@ maze
 
 
 ```python
-## 可选的参数：
+## 默认的参数：
 epoch = 20
 
 epsilon0 = 0.5
 alpha = 0.5
 gamma = 0.9
 
-maze_size = (6,6)
-trap_number = 1
+maze_size = (10,10)
+trap_number = 3
 ```
 
 
@@ -300,11 +300,96 @@ r.set_status(learning=True)
 
 runner = Runner(r, g)
 runner.run_training(epoch, display_direction=True)
-runner.generate_movie(filename = "final1.mp4") # 你可以注释该行代码，加快运行速度，不过你就无法观察到视频了。
+runner.generate_movie(filename = "final.mp4") # 你可以注释该行代码，加快运行速度，不过你就无法观察到视频了。
 ```
 
-    Generate Movies: 100%|██████████| 339/339 [00:05<00:00, 60.40it/s]
+    Generate Movies: 100%|██████████| 2484/2484 [01:22<00:00, 30.03it/s]
 
+
+
+```python
+## 优化的参数1：
+
+epsilon0 = 0.3
+alpha = 0.5
+gamma = 0.9
+
+g.reset_robot()
+r1 = Robot(g,alpha=alpha, epsilon0=epsilon0, gamma=gamma)
+r1.set_status(learning=True)
+
+runner1 = Runner(r1, g)
+runner1.run_training(epoch, display_direction=True)
+# runner1.generate_movie(filename = "final_01.mp4") # 你可以注释该行代码，加快运行速度，不过你就无法观察到视频了。
+```
+
+
+```python
+## 优化的参数2：
+
+epsilon0 = 0.7
+alpha = 0.5
+gamma = 0.9
+
+g.reset_robot()
+r2 = Robot(g,alpha=alpha, epsilon0=epsilon0, gamma=gamma)
+r2.set_status(learning=True)
+
+runner2 = Runner(r2, g)
+runner2.run_training(epoch, display_direction=True)
+# runner2.generate_movie(filename = "final_02.mp4") # 你可以注释该行代码，加快运行速度，不过你就无法观察到视频了。
+```
+
+
+```python
+## 优化的参数3：
+
+epsilon0 = 0.5
+alpha = 0.3
+gamma = 0.9
+
+g.reset_robot()
+r3 = Robot(g,alpha=alpha, epsilon0=epsilon0, gamma=gamma)
+r3.set_status(learning=True)
+
+runner3 = Runner(r3, g)
+runner3.run_training(epoch, display_direction=True)
+# runner3.generate_movie(filename = "final_03.mp4") # 你可以注释该行代码，加快运行速度，不过你就无法观察到视频了。
+```
+
+
+```python
+## 优化的参数4：
+
+epsilon0 = 0.5
+alpha = 0.7
+gamma = 0.9
+
+g.reset_robot()
+r4 = Robot(g,alpha=alpha, epsilon0=epsilon0, gamma=gamma)
+r4.set_status(learning=True)
+
+runner4 = Runner(r4, g)
+runner4.run_training(epoch, display_direction=True)
+# runner4.generate_movie(filename = "final_04.mp4") # 你可以注释该行代码，加快运行速度，不过你就无法观察到视频了。
+```
+
+
+```python
+## 优化的参数3：
+
+epsilon0 = 0.5
+alpha = 0.5
+gamma = 0.5
+
+g.reset_robot()
+r5 = Robot(g,alpha=alpha, epsilon0=epsilon0, gamma=gamma)
+r5.set_status(learning=True)
+
+runner5 = Runner(r5, g)
+runner5.run_training(epoch, display_direction=True)
+# runner5.generate_movie(filename = "final_05.mp4") # 你可以注释该行代码，加快运行速度，不过你就无法观察到视频了。
+```
 
 ---
 
@@ -325,23 +410,48 @@ runner.generate_movie(filename = "final1.mp4") # 你可以注释该行代码，�
 
 ```python
 runner.plot_results()
+runner1.plot_results()
+runner2.plot_results()
+runner3.plot_results()
+runner4.plot_results()
+runner5.plot_results()
 ```
 
 
-![png](output_25_0.png)
+![png](output_30_0.png)
+
+
+
+![png](output_30_1.png)
+
+
+
+![png](output_30_2.png)
+
+
+
+![png](output_30_3.png)
+
+
+
+![png](output_30_4.png)
+
+
+
+![png](output_30_5.png)
 
 
 (回答区)
 
 使用的参数为：
-epoch = 20
-epsilon0 = 0.5
-alpha = 0.5
-gamma = 0.9
-maze_size = (6,6)
-trap_number = 1
+ - epoch = 20 迭代次数，设置太小，将导致机器人无法到达目标，设置太大，会浪费算力；这里使用默认值
+ - epsilon0 = 0.7 epsilon-greedy算法的初始值，设置太小，将导致机器人开始对环境对随机遍历不足，难以找到目标；设置太大，会导致机器人过于随机遍历，难以收敛到最优策略；
+ - epsilon衰减函数使用指数衰减，以平滑的衰减，并报纸epsilon始终接近但大于0
+ - alpha = 0.5 用于权衡上一次结果和这一次结果的量，设置太小，会导致机器人过于关心当前的知识，而忽略未来的结果；设置太大，会导致机器人忽略当前拥有的知识；一般设置为0.5
+ - gamma = 0.9 考虑未来的因子，一般设置为0.9，表示充分考虑未来的奖励
+ - maze_size = (10,10) 选取地图大小，这里为了对比鲜明，选取10x10的地图
+ - trap_number = 3 陷阱数量，这里为了增加复杂度，使用3个陷阱
 
-通过对比不同的epsilon0和alpha参数，发现epsilon0的大小，决定了起始的生活的探索可能性，如果比较大的化，也会影响后面的收敛速度；alpha参数的大小，决定了继承经验的可能性，如果太小，会导致无法快速找到目标，如果太大，会导致收敛速度变慢；
 
 ---
 
