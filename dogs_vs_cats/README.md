@@ -37,5 +37,5 @@
 5. 打开notebook
 
    ```
-   jupyter notebook dogs_vs_cats.ipynb
+   jupyter notebook dogs_vs_cats.ipynb
    ```
