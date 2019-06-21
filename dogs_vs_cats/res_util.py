@@ -116,7 +116,7 @@ class ResNet:
         # plot_model(model,to_file='ResNet.png')
 
         # Compile the model
-        model.compile(optimizer='sgd',loss='categorical_crossentropy')
+        model.compile(optimizer='rmsprop', loss='categorical_crossentropy', metrics=['accuracy'])
         
         return model
 
