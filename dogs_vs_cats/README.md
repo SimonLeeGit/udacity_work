@@ -17,6 +17,14 @@
 
 4. 配置安装环境及相关的Python依赖包。
 
+   对于 __Linux__：
+
+   ```
+   conda env create -f requirements/linux.yml
+   conda activate dogs_vs_cats
+   KERAS_BACKEND=tensorflow python -c "from keras import backend"
+   ```
+
    对于 __Mac/OSX__：
 
    ```
