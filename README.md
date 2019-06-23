@@ -9,3 +9,4 @@
 5. 狗狗品种分类器（[dog_app](https://github.com/SimonLeeGit/udacity_work/tree/master/dog_app)）
 6. 强化学习走迷宫（[robot_maze](https://github.com/SimonLeeGit/udacity_work/tree/master/robot_maze)）
 7. 训练四轴飞行器学会飞行（[RL-Quadcopter](https://github.com/SimonLeeGit/udacity_work/tree/master/RL-Quadcopter)）
+8. 毕业项目（[dogs_vs_cats](https://github.com/SimonLeeGit/udacity_work/tree/master/dogs_vs_cats)）
