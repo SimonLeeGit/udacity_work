@@ -88,22 +88,23 @@ class ResNet:
 
         # Start Block
         input = Input(shape=input_shape)
-        block = Conv2D(64, (7,7), strides=(2,2))(input)
+        block = Conv2D(64, (7,7), strides=(2,2), padding='same')(input)
         block = BatchNormalization(axis=bn_axis)(block)
         block = Activation('relu')(block)
-        block = MaxPool2D((3,3), strides=(2,2))(block)
+        block = MaxPool2D((3,3), strides=(2,2), padding='same')(block)
 
         # Residual Blocks & Identity Blocks
         for i, num in enumerate(block_shape):
             kernal_size = [1,3,1]
-            filters = [64*(i+1), 64*(i+1), 256*(i+1)]
+            scale = pow(2,i)
+            filters = [64*scale, 64*scale, 256*scale]
 
             block = self.ResidualBlock(block, kernal_size, filters, i==0)
             for _ in range(num):
                 block = self.IdentityBlock(block, kernal_size, filters)
         
         # End Block
-        block = AveragePooling2D((7,1))(block)
+        block = AveragePooling2D((7,7))(block)
         block = Flatten()(block)
         block = Dense(num_outputs)(block)
         output = Activation('softmax')(block)
