@@ -43,19 +43,18 @@ print("There are {} test images.".format(len(test_files)))
 
 # In[ ]:
 
-import cv2
-import matplotlib.pyplot as plt
+# import cv2
+# import matplotlib.pyplot as plt
 # get_ipython().magic('matplotlib inline')
-get_ipython().magic('matplotlib auto')
 
-def visualize_img(img_path, ax):
-    img = cv2.imread(img_path)
-    ax.imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
+# def visualize_img(img_path, ax):
+#     img = cv2.imread(img_path)
+#     ax.imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
     
-fig = plt.figure(figsize=(20, 10))
-for i in range(12):
-    ax = fig.add_subplot(3, 4, i + 1, xticks=[], yticks=[])
-    visualize_img(train_files[i], ax)
+# fig = plt.figure(figsize=(20, 10))
+# for i in range(12):
+#     ax = fig.add_subplot(3, 4, i + 1, xticks=[], yticks=[])
+#     visualize_img(train_files[i], ax)
 
 
 # <a id="step1"></a>
@@ -177,25 +176,25 @@ history = model.fit(X_train, y_train, validation_data=(X_valid, y_valid),
 
 # In[ ]:
 
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 
-# Plot training & validation accuracy values
-plt.plot(history.history['acc'])
-plt.plot(history.history['val_acc'])
-plt.title('Model accuracy')
-plt.ylabel('Accuracy')
-plt.xlabel('Epoch')
-plt.legend(['Train', 'Test'], loc='upper left')
-plt.show()
+# # Plot training & validation accuracy values
+# plt.plot(history.history['acc'])
+# plt.plot(history.history['val_acc'])
+# plt.title('Model accuracy')
+# plt.ylabel('Accuracy')
+# plt.xlabel('Epoch')
+# plt.legend(['Train', 'Test'], loc='upper left')
+# plt.show()
 
-# Plot training & validation loss values
-plt.plot(history.history['loss'])
-plt.plot(history.history['val_loss'])
-plt.title('Model loss')
-plt.ylabel('Loss')
-plt.xlabel('Epoch')
-plt.legend(['Train', 'Test'], loc='upper left')
-plt.show()
+# # Plot training & validation loss values
+# plt.plot(history.history['loss'])
+# plt.plot(history.history['val_loss'])
+# plt.title('Model loss')
+# plt.ylabel('Loss')
+# plt.xlabel('Epoch')
+# plt.legend(['Train', 'Test'], loc='upper left')
+# plt.show()
 
 
 # ## 3.3 验证模型
@@ -216,12 +215,12 @@ test_predict = [np.argmax(model.predict(np.expand_dims(feature, axis=0), verbose
 # In[ ]:
 
 # plot a random sample of test images, their predicted labels
-fig = plt.figure(figsize=(20, 8))
-for i, idx in enumerate(np.random.choice(test_tensors.shape[0], size=32, replace=False)):
-    ax = fig.add_subplot(4, 8, i + 1, xticks=[], yticks=[])
-    ax.imshow(np.squeeze(test_tensors[idx]))
-    pred_idx = np.argmax(test_predict[idx])
-    ax.set_title("{}".format(data_labels[pred_idx]), color=("green"))
+# fig = plt.figure(figsize=(20, 8))
+# for i, idx in enumerate(np.random.choice(test_tensors.shape[0], size=32, replace=False)):
+#     ax = fig.add_subplot(4, 8, i + 1, xticks=[], yticks=[])
+#     ax.imshow(np.squeeze(test_tensors[idx]))
+#     pred_idx = np.argmax(test_predict[idx])
+#     ax.set_title("{}".format(data_labels[pred_idx]), color=("green"))
 
 
 # 将预测的结果提交到kaggle，以便得到模型的准确率排名。
