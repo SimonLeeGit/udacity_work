@@ -234,7 +234,7 @@ submit_frame = pd.read_csv("submission/sample_submission.csv")
 ## 保存结果
 submit_frame['label'] = test_predict
 test_result_name = "submission/submission.csv"
-result[['id','label']].to_csv(test_result_name,index=False)
+submit_frame[['id','label']].to_csv(test_result_name,index=False)
 
 
 # <a id="step3"></a>
